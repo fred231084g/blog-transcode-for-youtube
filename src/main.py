@@ -5,6 +5,7 @@ from transcode_request_body import Input, Output, Audio, Video, TranscodeRequest
 
 # returns the recommended video bitrate for SDR uploads given the video's frame rate and resolution
 def get_recommended_bitrate(frame_rate: int, resolution: int):
+  
   is_standard_frame_rate = frame_rate <= 30 and frame_rate >= 24
   is_high_frame_rate = frame_rate <= 60 and frame_rate >= 30
 
@@ -30,14 +31,21 @@ def get_recommended_bitrate(frame_rate: int, resolution: int):
   return None
 
 if __name__ == "__main__":
+
+  VIDEOS_DIRNAME = os.path.dirname(__file__) + "/../videos/"
+
   # local directory for the video you want to transcode
-  file_path = os.path.dirname(__file__) + "/../videos/input/pre-transcoded-video.mp4"
+  file_path = VIDEOS_DIRNAME + "/input/pre-transcoded-video.mp4"
+
   # where should dobly.io temporarily store the video you want to transcode?
   dolby_input_url = "dlb://in/pre-transcoded-video.mp4"
+
   # where should dobly.io temporarily store the output of your transcoded video?  
   transcoded_media_url = "dlb://out/transcoded-video.mp4"
+
   # where do you want to locally store the transcoded video output?
-  output_path = os.path.dirname(__file__) + "/../videos/output/transcoded-video.mp4" 
+  os.makedirs(VIDEOS_DIRNAME + "/output/", exist_ok=True)
+  output_path = VIDEOS_DIRNAME + "/output/transcoded-video.mp4" 
 
   media_api = MediaAPI()
 
