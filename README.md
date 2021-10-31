@@ -19,7 +19,13 @@ Here is how to set up and run this project locally.
 
     $ cd blog-transcode-for-youtube
     ```
-2. Create environment variable to store your Dolby.io Media API key.
+    
+2. Install required packages.
+    ```sh
+    $ pip3 install -r requirements.txt 
+    ```
+    
+4. Create environment variable to store your Dolby.io Media API key.
     ```sh
     $ export DOLBYIO_API_KEY=$DOLBYIO_API_KEY
     ```
@@ -30,7 +36,7 @@ Here is how to set up and run this project locally.
 
     ```
 
-3. Run the code
+3. Run the code to transcode the video file in [/videos/input/](/videos/input/).
     ```sh
     $ python3 ./src/main.py
     ```
