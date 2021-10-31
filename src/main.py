@@ -1,3 +1,4 @@
+import os
 import json
 from media_api import MediaAPI
 from transcode_request_body import Input, Output, Audio, Video, TranscodeRequestBody
@@ -30,16 +31,18 @@ def get_recommended_bitrate(frame_rate: int, resolution: int):
 
 if __name__ == "__main__":
   # local directory for the video you want to transcode
-  file_path = "./pre-transcoded-video.mp4"
+  file_path = os.path.dirname(__file__) + "/../videos/input/pre-transcoded-video.mp4"
   # where should dobly.io temporarily store the video you want to transcode?
   dolby_input_url = "dlb://in/pre-transcoded-video.mp4"
   # where should dobly.io temporarily store the output of your transcoded video?  
   transcoded_media_url = "dlb://out/transcoded-video.mp4"
   # where do you want to locally store the transcoded video output?
-  output_path = "./transcoded-video.mp4" 
+  output_path = os.path.dirname(__file__) + "/../videos/output/transcoded-video.mp4" 
 
   media_api = MediaAPI()
-  media_info = media_api.diagnose(file_path, dolby_input_url)
+
+  media_api.prepare_media(file_path, dolby_input_url)
+  media_info = media_api.diagnose(dolby_input_url)
 
   audio_object = Audio(
     codec = "aac_lc",
@@ -80,7 +83,6 @@ if __name__ == "__main__":
   )
   
   media_api.transcode(
-    dolby_input_url, 
     transcoded_media_url, 
     output_path, 
     transcode_request_body

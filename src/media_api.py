@@ -2,6 +2,10 @@ import os
 import requests
 import shutil
 import time
+from dotenv import load_dotenv
+from transcode_request_body import TranscodeRequestBody
+
+load_dotenv()
 
 class MediaAPI:
   REQUEST_HEADERS = {
@@ -11,8 +15,15 @@ class MediaAPI:
   }
 
   def prepare_media(self, file_path, dolby_input_url):
-    file_path = file_path
-    
+    """"
+
+    Calls the Media Input API from Dolby.io and temporarily stores the specified 
+    media file at a Dolby.io dlb:// location.
+
+    Learn more: https://docs.dolby.io/media-apis/reference/media-input-post
+
+    """"
+
     url = "https://api.dolby.com/media/input"
     body = {
         "url": dolby_input_url,
@@ -28,6 +39,14 @@ class MediaAPI:
       requests.put(presigned_url, data=input_file)
 
   def check_job_status(self, job_id, endpoint_url):
+    """"
+
+    Checks the status of a media process using it's Job ID and API endpoint url.
+
+    Learn more: https://docs.dolby.io/media-apis/docs/introduction-to-media-processing#make-asynchronous-requests
+
+    """"
+
     url = endpoint_url
     params = {
         "job_id": job_id,
@@ -42,6 +61,15 @@ class MediaAPI:
     return response.json()
 
   def download_media(self, output_path, transcoded_media_url):
+    """"
+
+    Calls the Media Output API from Dolby.io and downloads the media file specified 
+    to a desired location.
+
+    Learn more: https://docs.dolby.io/media-apis/reference/media-output
+
+    """"
+
     url = "https://api.dolby.com/media/output"
     args = {
         "url": transcoded_media_url,
@@ -54,7 +82,16 @@ class MediaAPI:
         with open(output_path, "wb") as output_file:
             shutil.copyfileobj(response.raw, output_file)
 
-  def transcode(self, dolby_input_url, transcoded_media_url, output_path, request_body):
+  def transcode(self, transcoded_media_url, output_path, request_body: TranscodeRequestBody):
+    """"
+
+    Calls the Media Transcode API from Dolby.io and once the job is successfully processed
+    will download the transcoded video from transcoded_media_url to ../videos/output/.
+
+    Learn more: https://docs.dolby.io/media-apis/docs/transcode-api-guide
+
+    """"
+
     url = "https://api.dolby.com/media/transcode"
 
     try:
@@ -66,7 +103,7 @@ class MediaAPI:
     job_id = response.json()["job_id"]
 
     print("\nTranscoding your media file...")
-    print("Job ID >>> ", job_id)
+    print("Job ID: ", job_id)
 
     # check job status every 10 seconds and download transcoded file when complete
     while True:
@@ -79,8 +116,15 @@ class MediaAPI:
         print(job_response)
         time.sleep(10)
 
-  def diagnose(self, file_path, dolby_input_url):
-    self.prepare_media(file_path, dolby_input_url)
+  def diagnose(self, dolby_input_url):
+    """"
+
+    Calls the Media Diagnose API from Dolby.io and once the job is successfully processed
+    will print the results to screen.
+
+    Learn more: https://docs.dolby.io/media-apis/docs/diagnose-api-guide
+
+    """"
 
     url = "https://api.dolby.com/media/diagnose"
     body = {
@@ -93,7 +137,7 @@ class MediaAPI:
     job_id = response.json()["job_id"];
 
     print("\nDiagnosing your media file...")
-    print("Job ID >>> ", job_id)
+    print("Job ID: ", job_id)
 
     # check job status every 10 seconds and return media info diagnosis when complete
     while True:
@@ -101,7 +145,7 @@ class MediaAPI:
       job_status = job_response["status"]
 
       if (job_status and job_status == "Success"):
-        print("\nMedia Info >>>", job_response["result"]["media_info"])
+        print("\nMedia Info: ", job_response["result"]["media_info"])
         return job_response["result"]["media_info"]
       else:
         print(job_response)
