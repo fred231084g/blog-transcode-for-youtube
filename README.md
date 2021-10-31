@@ -7,7 +7,7 @@ Here is how to set up and run this project locally.
 
 ### Prerequisites
 * Install Python 3.8+
-* Sign up for a free Dolby.io account here.
+* Sign up for a free Dolby.io account [here](https://dashboard.dolby.io/).
 * Create a new application and save the Media API key.
 
 ![How to Create Dolby.io App and Get API Key](https://imgur.com/VKvQRio.gif)
