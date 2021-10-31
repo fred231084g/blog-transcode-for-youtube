@@ -32,5 +32,5 @@ Here is how to set up and run this project locally.
 
 3. Run the code
     ```sh
-    python3 ./src/main.py
+    $ python3 ./src/main.py
     ```
