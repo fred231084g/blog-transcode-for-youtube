@@ -25,7 +25,7 @@ Here is how to set up and run this project locally.
     $ pip3 install -r requirements.txt 
     ```
     
-4. Create environment variable to store your Dolby.io Media API key.
+4. Create environment variable to store your Dolby.io Media API key (Replace `$DOLBYIO_API_KEY` with your API key).
     ```sh
     $ export DOLBYIO_API_KEY=$DOLBYIO_API_KEY
     ```
